@@ -46,16 +46,30 @@ RSpec.describe "bulk discounts#show" do
     visit merchant_bulk_discount_path(@merchant1, @bulk_discount1)
   end
 
-    #   4: Merchant Bulk Discount Show
-
-    # As a merchant
-    # When I visit my bulk discount show page
-    # Then I see the bulk discount's quantity threshold and percentage discount
   describe "US4." do
     it "shows a link to create a new discount and when clicked, I am taken to a new page
     where I see a form to add a new bulk discount" do
       expect(page).to have_content("Percentage Discount:#{@bulk_discount1.percentage_discount}")
       expect(page).to have_content("Quantity Threshold:#{@bulk_discount1.quantity_threshold}")
+    end
+  end
+
+    #   5: Merchant Bulk Discount Edit
+
+    # As a merchant
+    # When I visit my bulk discount show page
+    # Then I see a link to edit the bulk discount
+    # When I click this link
+    # Then I am taken to a new page with a form to edit the discount
+    # And I see that the discounts current attributes are pre-poluated in the form
+    # When I change any/all of the information and click submit
+    # Then I am redirected to the bulk discount's show page
+    # And I see that the discount's attributes have been updated
+  describe "US5." do
+    it "I see link_to edit the bulk discount and when clicked, I am taken to a new page with a form
+    to edit teh discount and I see that the discounts current attributes are pre-populated
+    in the form" do
+
     end
   end
 end
