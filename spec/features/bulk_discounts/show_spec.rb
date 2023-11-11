@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "bulk discounts#index" do
+RSpec.describe "bulk discounts#show" do
   before :each do
     @merchant1 = Merchant.create!(name: "Hair Care")
 
@@ -43,44 +43,57 @@ RSpec.describe "bulk discounts#index" do
     @bulk_discount1 = BulkDiscount.create!(merchant_id: @merchant1.id, percentage_discount: 20, quantity_threshold: 10)
     @bulk_discount2 = BulkDiscount.create!(merchant_id: @merchant1.id, percentage_discount: 40, quantity_threshold: 40)
 
-    visit merchant_bulk_discounts_path(@merchant1)
+    visit merchant_bulk_discount_path(@merchant1, @bulk_discount1)
   end
 
-  describe "US2." do
+  describe "US4." do
     it "shows a link to create a new discount and when clicked, I am taken to a new page
     where I see a form to add a new bulk discount" do
-      expect(page).to have_link("Create New Discount")
-      click_link("Create New Discount")
-
-      expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/new")
-      expect(page).to have_field(:percentage_discount)
-      expect(page).to have_field(:quantity_threshold)
-    end
-
-    it "when I fill in the form with valid data then I am redirected back to the bulk discount
-    index and see the new bulk discount listed" do
-      click_link("Create New Discount")
-
-      fill_in(:percentage_discount, with: 80)
-      fill_in(:quantity_threshold, with: 30)
-      click_button("Create Bulk Discount")
-
-      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
-      expect(page).to have_content("80")
+      expect(page).to have_content("Percentage Discount:#{@bulk_discount1.percentage_discount}")
+      expect(page).to have_content("Quantity Threshold:#{@bulk_discount1.quantity_threshold}")
     end
   end
 
-  describe "US3." do
-    it "next to each bulk discount I see a button to delete it, when clicked, I am then
-    redirected back to the bulk discounts index and no longer see the discount listed" do
-      within("#discount#{@bulk_discount1.id}_info") do
-        expect(page).to have_button("Delete #{@bulk_discount1.id}")
-        click_button("Delete #{@bulk_discount1.id}")
-      end
+    #   5: Merchant Bulk Discount Edit
 
-      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
+    # As a merchant
+    # When I visit my bulk discount show page
+    # Then I see a link to edit the bulk discount
+    # When I click this link
+    # Then I am taken to a new page with a form to edit the discount
+    # And I see that the discounts current attributes are pre-poluated in the form
+    # When I change any/all of the information and click submit
+    # Then I am redirected to the bulk discount's show page
+    # And I see that the discount's attributes have been updated
+  describe "US5." do
+    it "I see link_to edit the bulk discount and when clicked, I am taken to a new page with a form
+    to edit the discount and I see that the discounts current attributes are pre-populated
+    in the form" do
+      expect(page).to have_link("Edit #{@bulk_discount1.id}")
+      click_link("Edit #{@bulk_discount1.id}")
 
-      expect(page).to_not have_content(@bulk_discount1.percentage_discount)
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant1, @bulk_discount1))
+
+      expect(find_field("Percentage discount").value).to eq("#{@bulk_discount1.percentage_discount}")
+      expect(find_field("Quantity threshold").value).to eq("#{@bulk_discount1.quantity_threshold}")
+
+      expect(find_field("Percentage discount").value).to_not eq("#{@bulk_discount2.percentage_discount}")
+    end
+
+    it "when I change any/all of the info and click submit then I am redirected to the bulk
+    discount's show page and I see that the discount's attributes have been updated" do
+      visit edit_merchant_bulk_discount_path(@merchant1, @bulk_discount1)
+
+      fill_in("Percentage discount", with: "70")
+      fill_in("Quantity threshold", with: "4")
+
+      click_button("Submit")
+
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_discount1))
+      expect(page).to have_content("70")
+      expect(page).to have_content("4")
+
+      expect(page).to have_no_content("Percentage Discount: 20")
     end
   end
 end
