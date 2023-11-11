@@ -67,9 +67,33 @@ RSpec.describe "bulk discounts#show" do
     # And I see that the discount's attributes have been updated
   describe "US5." do
     it "I see link_to edit the bulk discount and when clicked, I am taken to a new page with a form
-    to edit teh discount and I see that the discounts current attributes are pre-populated
+    to edit the discount and I see that the discounts current attributes are pre-populated
     in the form" do
+      expect(page).to have_link("Edit #{@bulk_discount1.id}")
+      click_link("Edit #{@bulk_discount1.id}")
 
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant1, @bulk_discount1))
+
+      expect(find_field("Percentage discount").value).to eq("#{@bulk_discount1.percentage_discount}")
+      expect(find_field("Quantity threshold").value).to eq("#{@bulk_discount1.quantity_threshold}")
+
+      expect(find_field("Percentage discount").value).to_not eq("#{@bulk_discount2.percentage_discount}")
+    end
+
+    it "when I change any/all of the info and click submit then I am redirected to the bulk
+    discount's show page and I see that the discount's attributes have been updated" do
+      visit edit_merchant_bulk_discount_path(@merchant1, @bulk_discount1)
+
+      fill_in("Percentage discount", with: "70")
+      fill_in("Quantity threshold", with: "4")
+
+      click_button("Submit")
+
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_discount1))
+      expect(page).to have_content("70")
+      expect(page).to have_content("4")
+
+      expect(page).to have_no_content("Percentage Discount: 20")
     end
   end
 end
