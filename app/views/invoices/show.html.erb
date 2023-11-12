@@ -44,6 +44,12 @@
                 <%= f.submit 'Update Invoice' %>
               <% end %>
               </td>
+              <% bulk_discount = i.bulk_connect %>
+              <% if bulk_discount.present? %>
+                <td style="text-align:center">
+                <%= link_to "Bulk Discount #{bulk_discount.id}", "/merchants/#{@merchant.id}/bulk_discounts/#{bulk_discount.id}" %>
+                </td>
+              <% end %>
           </tr>
         </section>
       <% end %>
