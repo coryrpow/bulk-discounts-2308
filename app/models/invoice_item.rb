@@ -14,4 +14,12 @@ class InvoiceItem < ApplicationRecord
     invoice_ids = InvoiceItem.where("status = 0 OR status = 1").pluck(:invoice_id)
     Invoice.order(created_at: :asc).find(invoice_ids)
   end
+
+  def bulk_connect 
+    invoice_items.joins("INNER JOIN items ON invoice_items.item_id = items.id
+                  INNER JOIN merchants ON items.merchant_id = merchants.id
+                  INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id")
+                  .where("invoice_items.quantity >= 100")
+                  .pluck
+  end
 end
