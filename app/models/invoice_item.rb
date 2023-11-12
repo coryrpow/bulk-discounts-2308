@@ -22,10 +22,6 @@ class InvoiceItem < ApplicationRecord
                 .where(merchants: { id: merchant.id })
                 .first
   end
-
-  def bulk_discount_link
-    bulk_connect
-  end
 end
 # joins(:item)
 #   .joins("INNER JOIN merchants ON items.merchant_id = merchants.id")
