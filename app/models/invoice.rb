@@ -15,11 +15,11 @@ class Invoice < ApplicationRecord
   end
   
   def discount_revenue
-    invoice_items.joins("INNER JOIN items ON invoice_items.item_id = items.id
-          INNER JOIN merchants ON items.merchant_id = merchants.id
-          INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id")
-          .where("invoice_items.quantity >= bulk_discounts.quantity_threshold")
-          .sum("(bulk_discounts.percentage_discount * (invoice_items.unit_price * invoice_items.quantity)) / 100")
-
+    invoice_items.joins(:item)
+                 .joins("INNER JOIN merchants ON items.merchant_id = merchants.id")
+                 .joins("INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id")
+                 .where("invoice_items.quantity >= bulk_discounts.quantity_threshold")
+                 .sum("(bulk_discounts.percentage_discount * (invoice_items.unit_price * invoice_items.quantity)) / 100")
   end
+  
 end

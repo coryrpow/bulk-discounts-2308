@@ -16,10 +16,27 @@ class InvoiceItem < ApplicationRecord
   end
 
   def bulk_connect 
-    invoice_items.joins("INNER JOIN items ON invoice_items.item_id = items.id
-                  INNER JOIN merchants ON items.merchant_id = merchants.id
-                  INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id")
-                  .where("invoice_items.quantity >= 100")
-                  .pluck
+    merchant = item.merchant
+    BulkDiscount.joins(:merchant)
+                .where("bulk_discounts.quantity_threshold <= ?", quantity)
+                .where(merchants: { id: merchant.id })
+                .first
+  end
+
+  def bulk_discount_link
+    bulk_connect
   end
 end
+# joins(:item)
+#   .joins("INNER JOIN merchants ON items.merchant_id = merchants.id")
+#   .joins("INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id")
+#   .where("invoice_items.quantity >= bulk_discounts.quantity_threshold")
+#   .exists?
+
+
+
+# invoice_items.joins("INNER JOIN items ON invoice_items.item_id = items.id
+#               INNER JOIN merchants ON items.merchant_id = merchants.id
+#               INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id")
+#               .where("invoice_items.quantity >= 100")
+#               .pluck
