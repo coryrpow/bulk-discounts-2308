@@ -5,6 +5,14 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+Transaction.destroy_all 
+Merchant.destroy_all 
+Item.destroy_all 
+Invoice.destroy_all 
+InvoiceItem.destroy_all 
+Customer.destroy_all 
+BulkDiscount.destroy_all 
+
 Rake::Task['db:drop'].invoke
 Rake::Task['db:create'].invoke
 Rake::Task['db:migrate'].invoke
