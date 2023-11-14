@@ -5,5 +5,8 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+Rake::Task['db:drop'].invoke
+Rake::Task['db:create'].invoke
+Rake::Task['db:migrate'].invoke
 
 Rake::Task["csv_load:all"].invoke
