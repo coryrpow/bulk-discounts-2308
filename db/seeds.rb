@@ -13,10 +13,6 @@ InvoiceItem.destroy_all
 Customer.destroy_all 
 BulkDiscount.destroy_all 
 
-Rake::Task['db:drop'].invoke
-Rake::Task['db:create'].invoke
-Rake::Task['db:migrate'].invoke
-
 Rake::Task["csv_load:all"].invoke
 
 @merchant1 = Merchant.create!(name: "Hair Care")
