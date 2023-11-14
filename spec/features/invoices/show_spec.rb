@@ -110,8 +110,8 @@ RSpec.describe "invoices show" do
     bulk discounts in the calculation" do
       visit merchant_invoice_path(@merchant1, @invoice_1)
 
-      expect(page).to have_content("Total Revenue: #{@invoice_1.total_revenue}")
-      expect(page).to have_content("Discount Revenue: #{@invoice_1.discount_revenue}")
+      expect(page).to have_content("Total Revenue: $#{@invoice_1.total_revenue}")
+      expect(page).to have_content("Total Discounted Revenue: $#{@invoice_1.discount_total}")
     end
   end
 
@@ -126,7 +126,6 @@ RSpec.describe "invoices show" do
       within("#the-status-#{@ii_11.id}") do
         expect(page).to have_link("Bulk Discount #{@bulk_discount1.id}")
       end
-  
     end
   end
 end

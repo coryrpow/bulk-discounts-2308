@@ -76,7 +76,8 @@ describe "Admin Invoices Index Page" do
     it "Shows the total revenue from this invoice (not including discounts) and the total discounted revenue
     from this invoice which includes bulk discounts in the calculation" do
       expect(page).to have_content("Total Revenue: $#{@i1.total_revenue}")
-      expect(page).to have_content("Total Discounted Revenue: $#{@i1.discount_total}")
+      expect(page).to have_content("Total Discounted Revenue: $#{@i1.discount_total}") 
+    
     end
   end
 end
